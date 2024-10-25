@@ -8,7 +8,6 @@ const userSchema = mongoose.Schema({
   isAdmin:{type: Boolean, default: false},
   level:{ type: Number, default: 0},
   isOwner:{type: Boolean, default: false},
-  // isCoach:{type: Boolean, default: true},
 
 },{ timestamps: true });
 

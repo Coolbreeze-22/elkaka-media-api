@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 
 const commentSchema = mongoose.Schema(
   {
-    creator: { type: String },
     message: { type: String },
+    creatorId: { type: String },
+    isCreatorAdmin: {type: Boolean, default: false},
+    creatorLevel: { type: Number, default: 0},
+    isCreatorOwner: {type: Boolean, default: false},
   },
   { timestamps: true }
 );
@@ -15,7 +18,10 @@ const postSchema = mongoose.Schema(
     message: String,
     selectedFile: String,
     tags: [String],
-    creator: String,
+    creatorId: String,
+    isCreatorAdmin: {type: Boolean, default: false},
+    creatorLevel: { type: Number, default: 0},
+    isCreatorOwner: {type: Boolean, default: false},
     likes: {
       type: [String],
       default: [],

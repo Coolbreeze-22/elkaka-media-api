@@ -1,5 +1,4 @@
 import express from 'express'
-// const express = require("express") the normal way for server side, but i am able to use import method bcos i changed type to module in package.json
 import bodyParser from "body-parser"
 import mongoose from "mongoose"
 import cors from 'cors'
@@ -19,17 +18,8 @@ app.use('/users', userRouter);
 app.use('/migration', migrationRouter);
 
 const PORT = process.env.PORT || 5000;
-// const PORT = 5000;
+// const PORT =  5000;
 
 mongoose.connect(process.env.CONNECTION_URL)
 .then(() => app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)))
 .catch((error) => console.log(error.message));
-
-
-// try {
-//     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`))
-// }  
-// catch (error) {
-//     console.log(error.message)
-// }
-// try is working like .then above, but catch is not showing the errors like .catch above

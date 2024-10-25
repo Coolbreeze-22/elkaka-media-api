@@ -8,18 +8,10 @@ postRouter.get('/', getPosts);
 postRouter.get('/id/:id', getPostById);
 postRouter.get('/search', getPostsBySearch);
 postRouter.post('/', authMiddle, createPost);
-postRouter.patch('/:id', updatePost);
-postRouter.delete('/:id', deletePost);
+postRouter.patch('/:id', authMiddle, updatePost);
+postRouter.delete('/:id', authMiddle, deletePost);
 postRouter.patch('/:id/likePost', authMiddle, likePost);
-postRouter.patch('/:id/commentPost', commentPost);
+postRouter.patch('/:id/commentPost', authMiddle, commentPost);
 postRouter.patch('/comments/:id', deleteComment);
 
 export default postRouter;
-
-
-
-// postRouter.get('/', getPosts);
-// postRouter.post('/', createPost);
-// postRouter.patch('/:id', updatePost);
-// postRouter.delete('/:id', deletePost);
-// postRouter.patch('/:id/likePost', likePost);
