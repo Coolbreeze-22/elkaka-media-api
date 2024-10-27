@@ -201,7 +201,7 @@ export const deleteComment = async (req, res) => {
   try {
     const foundPost = await postModel.findById(postId);
     foundPost.comments = foundPost.comments.filter(
-      (com) => com._id !== String(commentId)
+      (com) =>String(com._id) !== String(commentId)
     );
     const post = await postModel.findByIdAndUpdate(postId, foundPost, {
       new: true,
