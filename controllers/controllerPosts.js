@@ -99,6 +99,8 @@ export const createPost = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
+  console.log(req.userId)
+  console.log(req.params.id)
   try {
     const sender = await userModel.findById(req.userId);
     const post = await postModel.findById(req.params.id);
@@ -173,7 +175,6 @@ export const likePost = async (req, res) => {
 export const commentPost = async (req, res) => {
   const { id } = req.params;
   const { comment } = req.body;
-
   try {
     const commentCreator = await userModel.findById(req.userId);
     const newComment = {

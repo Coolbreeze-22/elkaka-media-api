@@ -1,5 +1,4 @@
 import express from "express";
-import authMiddle from "../middleware/authMiddle.js";
 import userModel from "../models/userModel.js";
 
 const migrationRouter = express.Router();
