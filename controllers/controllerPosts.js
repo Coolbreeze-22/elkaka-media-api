@@ -99,8 +99,6 @@ export const createPost = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
-  console.log(req.userId)
-  console.log(req.params.id)
   try {
     const sender = await userModel.findById(req.userId);
     const post = await postModel.findById(req.params.id);
@@ -203,9 +201,9 @@ export const deleteComment = async (req, res) => {
   try {
     const foundPost = await postModel.findById(postId);
     foundPost.comments = foundPost.comments.filter(
-      (com) => com.id !== String(commentId)
+      (com) => com._id !== String(commentId)
     );
-    const post = await postModel.findByIdAndUpdate(pId, foundPost, {
+    const post = await postModel.findByIdAndUpdate(postId, foundPost, {
       new: true,
     });
     res.status(200).json(post);
