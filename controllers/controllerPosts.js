@@ -50,19 +50,57 @@ export const getPostsBySearch = async (req, res) => {
   const currentPage = Number(page);
 
   try {
-    const titles = new RegExp(title, "i");
-    if (title && !tags) {
-      const posts = await postModel.find({ title: titles }).sort({ _id: -1 });
+    const singleTitle = new RegExp(title, "i");
+    const isCommaInTitle = title.includes(",");
+    const singleTag = new RegExp(tags, "i");
+    const isCommaInTags = tags.includes(",");
+
+    if (title && !isCommaInTitle && !tags) {
+      const posts = await postModel
+        .find({ title: singleTitle })
+        .sort({ _id: -1 });
       res.status(200).json({ posts, currentPage });
-    } else if (tags && !title) {
+    } else if (title && isCommaInTitle && !tags) {
+      const posts = await postModel
+        .find({ title: { $in: title.split(",") } })
+        .sort({ _id: -1 });
+      res.status(200).json({ posts, currentPage });
+    } else if (tags && !isCommaInTags && !title) {
+      const posts = await postModel.find({ tags: singleTag }).sort({ _id: -1 });
+      res.status(200).json({ posts, currentPage });
+    } else if (tags && isCommaInTags && !title) {
       const posts = await postModel
         .find({ tags: { $in: tags.split(",") } })
         .sort({ _id: -1 });
       res.status(200).json({ posts, currentPage });
-    } else if (title && tags) {
+    } else if (title && tags && !isCommaInTitle && !isCommaInTags) {
       const posts = await postModel
         .find({
-          $or: [{ title: titles }, { tags: { $in: tags.split(",") } }],
+          $or: [{ title: singleTitle }, { tags: singleTag }],
+        })
+        .sort({ _id: -1 });
+      res.status(200).json({ posts, currentPage });
+    } else if (title && tags && isCommaInTitle && isCommaInTags) {
+      const posts = await postModel
+        .find({
+          $or: [
+            { title: { $in: title.split(",") } },
+            { tags: { $in: tags.split(",") } },
+          ],
+        })
+        .sort({ _id: -1 });
+      res.status(200).json({ posts, currentPage });
+    } else if (title && tags && isCommaInTitle && !isCommaInTags) {
+      const posts = await postModel
+        .find({
+          $or: [{ title: { $in: title.split(",") } }, { tags: singleTag }],
+        })
+        .sort({ _id: -1 });
+      res.status(200).json({ posts, currentPage });
+    } else if (title && tags && !isCommaInTitle && isCommaInTags) {
+      const posts = await postModel
+        .find({
+          $or: [{ title: singleTitle }, { tags: { $in: tags.split(",") } }],
         })
         .sort({ _id: -1 });
       res.status(200).json({ posts, currentPage });
@@ -111,7 +149,8 @@ export const deletePost = async (req, res) => {
     } else if (
       sender.isOwner &&
       post.isCreatorOwner &&
-      (String(sender._id) === post.creatorId || sender.level > post.creatorLevel)
+      (String(sender._id) === post.creatorId ||
+        sender.level > post.creatorLevel)
     ) {
       await postModel.findByIdAndRemove(req.params.id);
       res.status(200).json("Deleted Successfully");
@@ -201,7 +240,7 @@ export const deleteComment = async (req, res) => {
   try {
     const foundPost = await postModel.findById(postId);
     foundPost.comments = foundPost.comments.filter(
-      (com) =>String(com._id) !== String(commentId)
+      (com) => String(com._id) !== String(commentId)
     );
     const post = await postModel.findByIdAndUpdate(postId, foundPost, {
       new: true,
