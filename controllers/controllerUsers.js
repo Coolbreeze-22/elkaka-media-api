@@ -36,7 +36,7 @@ export const signIn = async (req, res) => {
 
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
-      "test",
+        process.env.TESTERID,
       { expiresIn: "3d" }
     );
 
@@ -62,7 +62,7 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
       name: `${firstName} ${lastName}`,
     });
-    const token = jwt.sign({ email: newUser.email, id: newUser._id }, "test", {
+    const token = jwt.sign({ email: newUser.email, id: newUser._id }, process.env.TESTERID, {
       expiresIn: "3d",
     });
 
